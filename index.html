@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#15231e" />
+    <meta name="description" content="Explore a cozy German town and learn one greeting at a time." />
+    <title>Deutschstadt — A little German adventure</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="world-data.js" defer></script>
+    <script src="lessons.js" defer></script>
+    <script src="learning.js" defer></script>
+    <script src="multiplayer-client.js" defer></script>
+    <script src="game.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="title-screen" class="title-screen" aria-label="Main menu">
+        <div class="title-card">
+          <div class="brand-mark" aria-hidden="true">D<span>✦</span></div>
+          <p class="eyebrow">A LITTLE GERMAN ADVENTURE</p>
+          <h1>Deutsch<span>stadt</span></h1>
+          <p id="welcome-intro" class="intro">Welcome to Deutschstadt!<br /><br />Explore a German town, meet its residents, and learn German through everyday conversations.<br /><br />No previous German knowledge is required.</p>
+          <label class="name-label" for="name-input">YOUR ADVENTURER</label>
+          <input id="name-input" maxlength="18" value="Alex" autocomplete="given-name" />
+          <div class="menu-actions">
+            <button id="new-game" class="button button-primary">Single Player · Start learning <span>↗</span></button>
+            <button id="continue-game" class="button button-secondary" disabled>Continue journey</button>
+            <button id="practice-german" class="button button-secondary">Practise German <span>→</span></button>
+            <button id="multiplayer-menu-button" class="button button-secondary multiplayer-menu-button" type="button">Multiplayer <span>↗</span></button>
+            <button id="reset-progress" class="text-button reset-button hidden">Reset progress</button>
+          </div>
+          <div class="menu-links"><button id="settings-button" class="text-button">Settings</button><span>·</span><button id="help-button" class="text-button">How to play</button></div>
+          <p id="menu-note" class="menu-note">Your progress is saved on this device.</p>
+        </div>
+        <div class="title-art" aria-hidden="true"><div class="sun"></div><div class="hill hill-back"></div><div class="hill hill-front"></div><div class="art-house house-one"></div><div class="art-house house-two"></div><div class="art-tree tree-one"></div><div class="art-tree tree-two"></div><div class="art-path"></div><div class="art-caption">Willkommen in deiner neuen Heimat.</div></div>
+      </section>
+
+      <section id="game-screen" class="game-screen hidden" aria-label="Deutschstadt game">
+        <header class="game-header">
+          <a class="mini-brand" href="#" aria-label="Deutschstadt home"><span class="mini-mark">D</span><span>Deutschstadt</span></a>
+          <div class="player-card"><div class="avatar">✿</div><div class="player-meta"><span id="hud-name">Alex</span><span id="hud-level" class="level-label">LEVEL 1 · WANDERER</span></div></div>
+          <div class="xp-card"><div class="xp-top"><span>STADT-ERFAHRUNG</span><strong id="hud-xp">0 XP</strong></div><div class="xp-track" role="progressbar" aria-label="Progress to next level" aria-valuemin="0" aria-valuenow="0" aria-valuemax="20"><div id="xp-fill" class="xp-fill"></div></div><span id="xp-progress" class="xp-progress">20 XP to Level 2</span></div>
+          <button id="journal-button" class="icon-button journal-button" aria-label="Open learning journal" title="Learning journal">✎</button>
+          <button id="pause-button" class="icon-button" aria-label="Pause game" title="Pause (Esc)">Ⅱ</button>
+        </header>
+        <div class="town-frame">
+          <canvas id="town-canvas" aria-label="Town map. Move with WASD or arrow keys. Press E near a neighbor to talk." tabindex="0"></canvas>
+          <div class="location-pill"><span class="location-dot"></span><span id="location-name">MARKTPLATZ</span><span class="location-divider">/</span><span>DEUTSCHLAND</span></div>
+          <section id="mission-card" class="mission-card hidden" aria-live="polite" aria-label="Current mission">
+            <div class="mission-heading"><strong id="mission-title">CURRENT MISSION</strong><button id="mission-toggle" class="mission-toggle" type="button" aria-expanded="true" aria-controls="mission-details">Minimise</button></div>
+            <div id="mission-details" class="mission-details"><span id="mission-objective"></span><span id="mission-destination" class="mission-destination"></span></div>
+          </section>
+          <section id="side-mission-card" class="side-mission-card hidden" aria-live="polite" aria-label="Optional side mission">
+            <div class="side-mission-heading">
+              <strong class="side-mission-compact-label">SIDE QUEST</strong>
+              <strong id="side-mission-title" class="side-mission-title">SIDE MISSION</strong>
+              <button id="side-mission-toggle" class="mission-toggle" type="button" aria-expanded="true" aria-controls="side-mission-details" aria-label="Minimise side quest">Minimise</button>
+            </div>
+            <div id="side-mission-details" class="side-mission-details">
+              <span id="side-mission-objective"></span>
+              <small id="side-mission-destination"></small>
+            </div>
+          </section>
+          <div id="interaction-hint" class="interaction-hint hidden"><kbd>E</kbd><span><span id="interaction-action">Talk to</span> <strong id="nearby-name"></strong></span></div>
+          <div id="dialogue-box" class="dialogue-box hidden" role="dialog" aria-live="polite">
+            <div class="dialogue-person"><div id="dialogue-avatar" class="dialogue-avatar">✿</div><div><strong id="dialogue-name">Marta</strong><span id="dialogue-role">Deine Nachbarin</span></div><span id="dialogue-greeting-count" class="greeting-stamp">GUTEN TAG</span></div>
+            <p id="dialogue-german" class="dialogue-german"></p><p id="dialogue-english" class="dialogue-english"></p>
+            <div class="dialogue-footer"><span>Press <kbd>E</kbd> or <kbd>Esc</kbd> to close</span><button id="dialogue-close" class="text-button">Weiter <span>→</span></button></div>
+          </div>
+          <div id="toast" class="toast hidden" role="status"></div>
+        </div>
+        <footer class="game-footer"><div class="movement-help"><span class="key-cluster"><kbd>W</kbd><span><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span></span><span>or <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> to move</span><span class="footer-separator">·</span><span><kbd>E</kbd> talk</span></div><div class="multiplayer-controls"><span id="multiplayer-status" class="multiplayer-status" data-state="disconnected" role="status" aria-live="polite">Solo play · offline</span><button id="multiplayer-connect" class="multiplayer-connect" type="button">Multiplayer</button></div><div id="save-status" class="save-status" data-state="saved" role="status" aria-live="polite"><span class="save-dot"></span><span id="save-status-text">Saved on this device</span></div></footer>
+      </section>
+    </main>
+
+    <div id="modal-backdrop" class="modal-backdrop hidden" role="presentation">
+      <section id="modal-panel" class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button id="modal-close" class="modal-close" aria-label="Close dialog">×</button>
+        <p class="eyebrow">DEUTSCHSTADT</p><h2 id="modal-title"></h2><div id="modal-content"></div>
+      </section>
+    </div>
+  </body>
+</html>

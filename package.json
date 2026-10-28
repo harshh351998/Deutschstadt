@@ -1,0 +1,13 @@
+{
+  "name": "deutschstadt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline German-learning RPG with optional LAN multiplayer",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
